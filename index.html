@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Screening</title>
+<style>
+  :root {
+    --white: #ffffff;
+    --plate: #f1f1f1;
+    --plate-deep: #e4e4e4;
+    --black: #000000;
+    --grey-text: #5c5c5c;
+    --font: "Helvetica Neue", Helvetica, "Arial Nova", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: var(--font);
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 20px 20px 48px; }
+
+  header { padding: 12px 8px 28px; }
+  .mark { font-weight: 700; font-size: 1.25rem; letter-spacing: -0.03em; }
+
+  .plate { background: var(--plate); border-radius: 32px; }
+
+  /* Buttons: always black, always very round */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    height: 54px;
+    padding: 0 1.6rem 0 0.9rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--black);
+    color: var(--white);
+    font: 600 1rem var(--font);
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .btn .dot {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--black);
+    display: grid; place-items: center;
+  }
+  .btn-round, .btn-icon {
+    border: 0;
+    border-radius: 50%;
+    background: var(--black);
+    color: var(--white);
+    display: grid; place-items: center;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .btn-round { width: 112px; height: 112px; }
+  .btn-icon { width: 48px; height: 48px; }
+  .btn:hover, .btn-round:hover, .btn-icon:hover { transform: scale(1.05); }
+  .btn:active, .btn-round:active, .btn-icon:active { transform: scale(0.96); }
+  .btn:focus-visible, .btn-round:focus-visible, .btn-icon:focus-visible {
+    outline: 3px solid var(--black);
+    outline-offset: 4px;
+  }
+
+  /* Featured */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 20px;
+    padding: 20px;
+  }
+  .hero-copy {
+    padding: 16px 12px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  h1 {
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    line-height: 0.88;
+  }
+  .lede { max-width: 32ch; color: var(--grey-text); font-size: 1.0625rem; margin-bottom: 24px; }
+  .screen {
+    background: var(--white);
+    border-radius: 24px;
+    aspect-ratio: 16 / 9;
+    display: grid;
+    place-items: center;
+  }
+
+  /* Grid of plates */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .card {
+    min-height: 270px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 48px;
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    color: var(--grey-text);
+    font-size: 0.9375rem;
+  }
+  h2 {
+    font-size: clamp(1.9rem, 3vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  footer { margin: 28px 8px 0; color: var(--grey-text); font-size: 0.875rem; }
+
+  /* Player */
+  dialog {
+    border: 0;
+    padding: 0;
+    margin: auto;
+    max-width: none;
+    width: min(960px, calc(100vw - 24px));
+    border-radius: 32px;
+    background: var(--plate);
+    overflow: hidden;
+  }
+  dialog::backdrop { background: rgba(0, 0, 0, 0.72); }
+  .player-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 12px 24px;
+  }
+  .player-bar h3 { font-size: 1.25rem; letter-spacing: -0.03em; }
+  .frame {
+    margin: 0 16px 16px;
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: var(--black);
+  }
+  .frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 720px) {
+    .hero { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: 1fr; }
+    .card { min-height: 220px; gap: 36px; }
+    .btn-round { width: 88px; height: 88px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><span class="mark">Screening</span></header>
+
+  <main>
+    <section class="hero plate" aria-labelledby="featured-title">
+      <div class="hero-copy">
+        <h1 id="featured-title">Dune</h1>
+        <div>
+          <p class="lede">A noble family takes charge of a desert planet and the one substance that makes space travel possible.</p>
+          <button class="btn" data-trailer="n9xhJrPXop4" data-title="Dune">
+            <span class="dot"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/></svg></span>
+            Play trailer
+          </button>
+        </div>
+      </div>
+      <div class="screen">
+        <button class="btn-round" data-trailer="n9xhJrPXop4" data-title="Dune" aria-label="Play the Dune trailer">
+          <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- To change a trailer, replace the YouTube video ID in data-trailer -->
+    <section class="grid" aria-label="More trailers">
+      <article class="card plate">
+        <div class="card-top"><span>Science fiction</span><span>2010</span></div>
+        <div>
+          <h2>Inception</h2>
+          <button class="btn" data-trailer="YoHD9XEInc0" data-title="Inception">
+            <span class="dot"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/></svg></span>
+            Play trailer
+          </button>
+        </div>
+      </article>
+
+      <article class="card plate">
+        <div class="card-top"><span>Science fiction</span><span>2014</span></div>
+        <div>
+          <h2>Interstellar</h2>
+          <button class="btn" data-trailer="zSWdZVtXT7E" data-title="Interstellar">
+            <span class="dot"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/></svg></span>
+            Play trailer
+          </button>
+        </div>
+      </article>
+
+      <article class="card plate">
+        <div class="card-top"><span>Crime</span><span>2008</span></div>
+        <div>
+          <h2>The Dark Knight</h2>
+          <button class="btn" data-trailer="EXeTwQWrcwY" data-title="The Dark Knight">
+            <span class="dot"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/></svg></span>
+            Play trailer
+          </button>
+        </div>
+      </article>
+
+      <article class="card plate">
+        <div class="card-top"><span>Science fiction</span><span>2017</span></div>
+        <div>
+          <h2>Blade Runner 2049</h2>
+          <button class="btn" data-trailer="gCcx85zbxz4" data-title="Blade Runner 2049">
+            <span class="dot"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/></svg></span>
+            Play trailer
+          </button>
+        </div>
+      </article>
+
+      <article class="card plate">
+        <div class="card-top"><span>Thriller</span><span>2019</span></div>
+        <div>
+          <h2>Parasite</h2>
+          <button class="btn" data-trailer="5xH0HfJHsaY" data-title="Parasite">
+            <span class="dot"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/></svg></span>
+            Play trailer
+          </button>
+        </div>
+      </article>
+
+      <article class="card plate">
+        <div class="card-top"><span>Science fiction</span><span>1999</span></div>
+        <div>
+          <h2>The Matrix</h2>
+          <button class="btn" data-trailer="vKQi3bBA1y8" data-title="The Matrix">
+            <span class="dot"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z"/></svg></span>
+            Play trailer
+          </button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>Trailers stream from YouTube.</footer>
+</div>
+
+<dialog id="player" aria-labelledby="player-title">
+  <div class="player-bar">
+    <h3 id="player-title"></h3>
+    <button class="btn-icon" id="close" aria-label="Close trailer">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="frame"></div>
+</dialog>
+
+<script>
+  const dlg = document.getElementById('player');
+  const frame = dlg.querySelector('.frame');
+  const titleEl = document.getElementById('player-title');
+  let opener = null;
+
+  function openTrailer(btn) {
+    opener = btn;
+    const name = btn.dataset.title;
+    titleEl.textContent = name;
+
+    const f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(btn.dataset.trailer) + '?autoplay=1&rel=0&playsinline=1';
+    f.title = name + ' trailer';
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allowFullscreen = true;
+    frame.replaceChildren(f);
+
+    dlg.showModal();
+  }
+
+  document.querySelectorAll('[data-trailer]').forEach(btn => {
+    btn.addEventListener('click', () => openTrailer(btn));
+  });
+
+  document.getElementById('close').addEventListener('click', () => dlg.close());
+
+  // Click on the dimmed backdrop closes the player
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+
+  // Removing the iframe stops playback; return focus to the button that opened it
+  dlg.addEventListener('close', () => {
+    frame.replaceChildren();
+    if (opener) opener.focus();
+  });
+</script>
+</body>
+</html>
